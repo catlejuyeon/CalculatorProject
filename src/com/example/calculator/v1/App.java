@@ -8,10 +8,16 @@ import java.util.Scanner;
 //캡슐화
 //사칙연산을 수행 후, 결과값 반환 메서드 구현
 //연산 결과를 저장하는 컬렉션 타입 필드를 가진 Calculator 클래스를 생성
+//가장 먼저 저장된 데이터를 삭제하는 기능을 가진 메서드를 구현한 후 App 클래스의 main 메서드에 삭제 메서드가 활용될 수 있도록 수정
+//컬렉션에서 ‘값을 넣고 제거하는 방법을 이해한다.’가 중요
 public class App {
     public static void main(String[] args) {
         Calculator calculator = new Calculator();
         Scanner scanner = new Scanner(System.in);
+
+        //소수점 뒷자리 0 제거, 최대 6자리
+        //원래 반복문에 있었는데 밖에 빼도 잘 작동함
+        DecimalFormat df = new DecimalFormat("0.######");
 
         while (true) {
             try {
@@ -25,14 +31,13 @@ public class App {
                 String operator = scanner.nextLine();
 
                 double result = calculator.calculate(num1, num2, operator);
+                calculator.removeRequest(result);
 
 //                if (result % 1 == 0) {
 //                    System.out.println("결과: " + (int) result);
 //                } else {
 //                    System.out.printf("결과: %f \n", result);
 //                }
-                //소수점 뒷자리 0 제거, 최대 6자리
-                DecimalFormat df = new DecimalFormat("0.######");
 
                 System.out.print("저장된 연산 결과: ");
                 List<Double> results = calculator.getResults();
