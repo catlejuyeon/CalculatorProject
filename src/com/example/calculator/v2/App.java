@@ -1,55 +1,154 @@
 package com.example.calculator.v2;
 
-import com.example.calculator.v1.Calculator;
-
 import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Scanner;
 
 public class App {
     public static void main(String[] args) {
-        com.example.calculator.v1.Calculator calculator = new Calculator();
-        Scanner scanner = new Scanner(System.in);
+        Scanner sc = new Scanner(System.in);
+        Calculator.ArithmeticCalculator<Number> calc = new Calculator.ArithmeticCalculator<>();
 
-        //얘를 세터로 빼버림
-        //소수점 뒷자리 0 제거, 최대 6자리
-        //원래 반복문에 있었는데 밖에 빼도 잘 작동함
-        DecimalFormat df = new DecimalFormat(calculator.getDecimalFormatPattern());
+        while (true) {
+            Number num1, num2;
+            String op;
+
+            // 1️⃣ 첫 번째 숫자 입력
+            try {
+                System.out.print("첫 번째 숫자를 입력하세요: ");
+                num1 = parseNumber(sc.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("[ERROR] 숫자를 정확히 입력해주세요.");
+                continue; // 반복 처음으로
+            }
+
+            // 2️⃣ 두 번째 숫자 입력
+            try {
+                System.out.print("두 번째 숫자를 입력하세요: ");
+                num2 = parseNumber(sc.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("[ERROR] 숫자를 정확히 입력해주세요.");
+                continue; // 반복 처음으로
+            }
+
+            // 3️⃣ 연산자 입력
+            try {
+                System.out.print("사칙연산 기호를 입력하세요 (+, -, *, /): ");
+                op = sc.nextLine().trim();
+                if (!op.matches("[+\\-*/]")) throw new IllegalArgumentException();
+            } catch (IllegalArgumentException e) {
+                System.out.println("[ERROR] 연산 기호를 정확히 입력해주세요.");
+                continue;
+            }
+
+            // 4️⃣ 계산 수행
+            try {
+                Double result = calc.calculate(num1, num2, op);
+                printResults(calc.getResults());
+            } catch (ArithmeticException e) {
+                System.out.println("[ERROR] " + e.getMessage());
+                continue;
+            }
+
+            // 5️⃣ 계속할지 여부
+            System.out.print("더 계산하시겠습니까? (exit 입력 시 종료): ");
+            if (sc.nextLine().equalsIgnoreCase("exit")) {
+                System.out.println("프로그램을 종료합니다.");
+                break;
+            }
+            System.out.println();
+        }
+    }
+
+    // 문자열 → Number (정수/실수 자동 판별)
+    private static Number parseNumber(String input) {
+        if (input.contains(".")) {
+            return Double.parseDouble(input);
+        } else {
+            return Integer.parseInt(input);
+        }
+    }
+
+    // 결과 출력 (정수면 정수, 소수면 최대 6자리)
+    private static void printResults(List<Double> results) {
+        DecimalFormat df = new DecimalFormat("0.######");
+        System.out.print("저장된 연산 결과: ");
+        for (int i = 0; i < results.size(); i++) {
+            double r = results.get(i);
+            System.out.print((r % 1 == 0) ? (int) r : df.format(r));
+            if (i < results.size() - 1) System.out.print(", ");
+        }
+        System.out.println();
+    }
+}
+        /*
+        // 정수용 계산기: Integer로 파싱
+        Calculator.ArithmeticCalculator<Integer> intCalc = new Calculator.ArithmeticCalculator<>(Integer::parseInt);
+        // 실수용 계산기: Double로 파싱
+        Calculator.ArithmeticCalculator<Double> doubleCalc = new Calculator.ArithmeticCalculator<>(Double::parseDouble);
+
+        Scanner scanner = new Scanner(System.in);
 
         while (true) {
             try {
+                // 사용자 입력 받기
                 System.out.print("첫 번째 숫자를 입력하세요: ");
-                int num1 = Integer.parseInt(scanner.nextLine());
+                String num1 = scanner.nextLine();
 
                 System.out.print("두 번째 숫자를 입력하세요: ");
-                int num2 = Integer.parseInt(scanner.nextLine());
+                String num2 = scanner.nextLine();
 
                 System.out.print("사칙연산 기호를 입력하세요 (+, -, *, /): ");
-                String operator = scanner.nextLine();
+                String operator = scanner.nextLine().trim();
 
-                double result = calculator.calculate(num1, num2, operator);
-                calculator.removeRequest(result);
+                // 1️⃣ 먼저 double 계산기로 계산
+                doubleCalc.setDecimalPlaces(6);
+                double tempResult = doubleCalc.calculate(num1, num2, operator);
 
+                // 2️⃣ 결과값이 정수인지 실수인지 판단
+                boolean isFloatingPoint = tempResult % 1 != 0;
 
-                System.out.print("저장된 연산 결과: ");
-                List<Double> results = calculator.getResults();
+                // 계산기 선택 및 계산 수행
+                if (isFloatingPoint) {
+                    //소수점 최대 6자리까지 표시
+                    doubleCalc.setDecimalPlaces(6);
+                    //실수 계산기 사용
+                    double result = doubleCalc.calculate(num1, num2, operator);
+                    List<Double> results = doubleCalc.getResults();
+                    //결과 리스트 가져오기
 
-                for(int i=0; i<results.size(); i++){
-                    double r = results.get(i);
-                    //정수면 정수로 출력, 소수면 소수점으로 출력
-                    if(r%1==0){
-                        System.out.print((int)r);
-                    }else{
-                        System.out.print(df.format(r));
+                    //소수점 포맷 설정
+                    DecimalFormat df = new DecimalFormat(doubleCalc.getDecimalFormatPattern());
+
+                    System.out.print("저장된 연산 결과: ");
+                    //정수면 정수로 출력, 실수면 포맷 적용해서 출력
+                    for (int i = 0; i < results.size(); i++) {
+                        double r = results.get(i);
+                        if (r % 1 == 0) {
+                            System.out.print((int) r);
+                        } else {
+                            System.out.print(df.format(r));
+                        }
+                        if (i < results.size() - 1) {
+                            System.out.print(", ");
+                        }
                     }
-                    //마지막 값이 아니면 쉼표 추가
-                    if (i < results.size() - 1) {
-                        System.out.print(", ");
+                    System.out.println();
+                } else {
+                    //정수 계산기 사용
+                    intCalc.setDecimalPlaces(0); //정수는 소수점 없음
+                    int result = intCalc.calculate(num1, num2, operator);
+                    List<Integer> results = intCalc.getResults();
+
+                    System.out.print("저장된 연산 결과: ");
+                    for (int i = 0; i < results.size(); i++) {
+                        System.out.print(results.get(i));
+                        if (i < results.size() - 1) {
+                            System.out.print(", ");
+                        }
                     }
+                    System.out.println();
                 }
-                //줄바꿈 해줘야 더 계산하시겠습니까가 안 붙어서 나옴
-                System.out.println();
-
 
             } catch (NumberFormatException e) {
                 System.out.println("[ERROR] 숫자를 정확히 입력해주세요.");
@@ -62,15 +161,14 @@ public class App {
                 continue;
             }
 
-            // 계산 끝난 후 종료 여부 묻기
-            //println으로하니 enter입력하면서 너무 간격이 멀어져 print로 작성
+            // 계속할지 여부 확인
             System.out.print("더 계산하시겠습니까? (exit 입력 시 종료, 아니면 Enter): ");
             String exitInput = scanner.nextLine();
             if (exitInput.equalsIgnoreCase("exit")) {
                 System.out.println("프로그램을 종료합니다.");
                 break;
             }
-            System.out.println(); // 다음 계산을 위한 줄바꿈
+            System.out.println();
         }
     }
-}
+}*/
