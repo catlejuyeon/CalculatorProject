@@ -33,9 +33,25 @@ public class Calculator {
         return Collections.unmodifiableList(results);
     }
 
-    //setter 역할을 하는 메서드
+    //setter
+    //소수점 6자리로 설정
+    private int decimalPlaces = 6;
+    //최소 소수점 자리 0에서 최대 15까지 설정할 수 있음
+    //너무 많으면 의미없고 성능저하
+    public void setDecimalPlaces(int decimalPlaces) {
+        if (decimalPlaces >= 0 && decimalPlaces <= 15) {
+            this.decimalPlaces = decimalPlaces;
+        }
+    }
+    //자릿수 설정에 따라 포맷 형태를 만들어주는 메서드
+    public String getDecimalFormatPattern() {
+        return "0." + "#".repeat(decimalPlaces);
+    }
+
+
     //저장된 연산 결과들 중 가장 먼저 저장된 데이터를 삭제하는 기능 FIFO
     //외부에서 값을 입력받고 연산결과를 전달받아 내부리스트에 저장하는 진입점
+    //삭제도 기능 수정의 일부분인가?
     public void removeRequest(double result) {
         removeResults(result); // 내부 기능 호출
     }

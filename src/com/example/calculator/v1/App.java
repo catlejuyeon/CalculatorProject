@@ -15,9 +15,10 @@ public class App {
         Calculator calculator = new Calculator();
         Scanner scanner = new Scanner(System.in);
 
+        //얘를 세터로 빼버림
         //소수점 뒷자리 0 제거, 최대 6자리
         //원래 반복문에 있었는데 밖에 빼도 잘 작동함
-        DecimalFormat df = new DecimalFormat("0.######");
+        DecimalFormat df = new DecimalFormat(calculator.getDecimalFormatPattern());
 
         while (true) {
             try {
@@ -32,12 +33,6 @@ public class App {
 
                 double result = calculator.calculate(num1, num2, operator);
                 calculator.removeRequest(result);
-
-//                if (result % 1 == 0) {
-//                    System.out.println("결과: " + (int) result);
-//                } else {
-//                    System.out.printf("결과: %f \n", result);
-//                }
 
                 System.out.print("저장된 연산 결과: ");
                 List<Double> results = calculator.getResults();
@@ -57,14 +52,6 @@ public class App {
                 }
                 //줄바꿈 해줘야 더 계산하시겠습니까가 안 붙어서 나옴
                 System.out.println();
-
-//                for (double r: calculator.getResults()){
-//                    if(r%1==0){
-//                        System.out.println((int)r);
-//                    }else{
-//                        System.out.printf("%f", r);
-//                    }
-//                }
 
             } catch (NumberFormatException e) {
                 System.out.println("[ERROR] 숫자를 정확히 입력해주세요.");
