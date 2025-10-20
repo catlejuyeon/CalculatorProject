@@ -35,7 +35,7 @@ public class Calculator {
             };
 
             // 결과 저장
-            saveResult(result);
+            results.add(result);
             lastResult = result;
             return result;
         }
@@ -51,11 +51,6 @@ public class Calculator {
             };
         }
 
-        // 결과 저장 (저장 제한 없음)
-        private void saveResult(double result) {
-            results.add(result);
-        }
-
         public List<Double> getResults() {
             return Collections.unmodifiableList(results);
         }
@@ -68,7 +63,7 @@ public class Calculator {
             }
 
             results.stream()
-                    .filter(r->r>lastResult)
+                    .filter(r->r>lastResult)    //중복
                     .max(Double::compare)
                     .ifPresentOrElse(
                             max ->{
@@ -93,7 +88,7 @@ public class Calculator {
             }
 
             List<Double> maxValueResult = results.stream()
-                    .filter(r -> r > lastResult)
+                    .filter(r -> r > lastResult)    //중복
                     .sorted(Comparator.reverseOrder())//내림차순
                     .toList();
 
