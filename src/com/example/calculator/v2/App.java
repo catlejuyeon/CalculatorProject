@@ -11,7 +11,7 @@ public class App {
 
         while (true) {
             Number num1, num2;
-            String op;
+            String operation;
 
             // 1️⃣ 첫 번째 숫자 입력
             try {
@@ -34,8 +34,8 @@ public class App {
             // 3️⃣ 연산자 입력
             try {
                 System.out.print("사칙연산 기호를 입력하세요 (+, -, *, /): ");
-                op = sc.nextLine().trim();
-                if (!op.matches("[+\\-*/]")) throw new IllegalArgumentException();
+                operation = sc.nextLine().trim();
+                if (!operation.matches("[+\\-*/]")) throw new IllegalArgumentException();
             } catch (IllegalArgumentException e) {
                 System.out.println("[ERROR] 연산 기호를 정확히 입력해주세요.");
                 continue;
@@ -43,7 +43,7 @@ public class App {
 
             // 4️⃣ 계산 수행
             try {
-                Double result = calc.calculate(num1, num2, op);
+                Double result = calc.calculate(num1, num2, operation);
                 printResults(calc.getResults());
             } catch (ArithmeticException e) {
                 System.out.println("[ERROR] " + e.getMessage());
