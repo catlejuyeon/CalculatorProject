@@ -72,9 +72,9 @@ public class App {
         }
     }
 
-    // 결과 출력 (정수면 정수, 소수면 최대 6자리)
+    // 결과 출력 (정수면 정수, 소수면 최대 5자리)
     private static void printResults(List<Double> results) {
-        DecimalFormat df = new DecimalFormat("0.######");
+        DecimalFormat df = new DecimalFormat("0.#####");
         System.out.print("저장된 연산 결과: ");
         for (int i = 0; i < results.size(); i++) {
             double r = results.get(i);

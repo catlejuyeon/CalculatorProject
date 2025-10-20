@@ -14,6 +14,8 @@ public class Calculator {
     public static class ArithmeticCalculator<T extends Number> {
         private final List<Double> results = new ArrayList<>();
         private Double lastResult=null; //최근 계산 결과 저장
+        private static final DecimalFormat df = new DecimalFormat("0.#####");
+
 
         // 실제 계산 수행 (정수/실수 상관없이)
         public Double calculate(T num1, T num2, String operatorSymbol) {
@@ -65,8 +67,6 @@ public class Calculator {
                 return;
             }
 
-            DecimalFormat df = new DecimalFormat("0.######");
-
             results.stream()
                     .filter(r->r>lastResult)
                     .max(Double::compare)
@@ -88,8 +88,6 @@ public class Calculator {
 
         //저장된 연산 결과들 중 최근 연산 결과보다 큰 값들을 내림차순으로 보여주기
         public  void maxValueResultsDesc(){
-            DecimalFormat df = new DecimalFormat("0.#######");
-
             if(lastResult==null || results.isEmpty()){
                 return;
             }
