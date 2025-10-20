@@ -50,6 +50,8 @@ public class App {
                 continue;
             }
 
+            calc.maxValue();
+
             // 5️⃣ 계속할지 여부
             System.out.print("더 계산하시겠습니까? (exit 입력 시 종료): ");
             if (sc.nextLine().equalsIgnoreCase("exit")) {

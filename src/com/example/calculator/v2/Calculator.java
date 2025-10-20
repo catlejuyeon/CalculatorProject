@@ -1,9 +1,9 @@
 package com.example.calculator.v2;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.function.Function;
 
 public class Calculator {
     public enum OperatorType { SUM, MINUS, MULTIPLY, DIVIDE }
@@ -11,6 +11,7 @@ public class Calculator {
     // 제네릭 계산기 클래스
     public static class ArithmeticCalculator<T extends Number> {
         private final List<Double> results = new ArrayList<>();
+        private Double lastResult=null; //최근 계산 결과 저장
 
         // 실제 계산 수행 (정수/실수 상관없이)
         public Double calculate(T num1, T num2, String operatorSymbol) {
@@ -31,6 +32,7 @@ public class Calculator {
 
             // 결과 저장
             saveResult(result);
+            lastResult = result;
             return result;
         }
 
@@ -45,14 +47,41 @@ public class Calculator {
             };
         }
 
-        // 결과 저장 (2개까지만 유지)
+        // 결과 저장 (저장 제한 없음)
         private void saveResult(double result) {
-            if (results.size() >= 2) results.remove(0);
             results.add(result);
         }
 
         public List<Double> getResults() {
             return Collections.unmodifiableList(results);
+        }
+
+        //람다+스트림 사용 : 최근 결과보다 큰 값 중 최댓값 출력하기
+        public void maxValue(){
+            if(lastResult==null){
+                System.out.println("아직 계산 결과가 없습니다.");
+                return;
+            }
+
+            DecimalFormat df = new DecimalFormat("0.######");
+
+            results.stream()
+                    .filter(r->r>lastResult)
+                    .max(Double::compare)
+                    .ifPresentOrElse(
+                            max ->{
+                                String formatMax = (max % 1 == 0)
+                                        ? String.valueOf(max.intValue())
+                                        : df.format(max);
+                                System.out.println("연산 결과 중 최댓값: " +formatMax);
+                            },
+                            () -> {
+                                String formatLast = (lastResult % 1==0)
+                                        ?String.valueOf(lastResult.intValue())
+                                        : df.format(lastResult);
+                                System.out.println("최근 연산 결과(" + formatLast +")보다 큰 값이 없습니다.");
+                            }
+                    );
         }
     }
 }
