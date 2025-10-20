@@ -50,6 +50,7 @@ public class App {
                 continue;
             }
 
+            calc.maxValueResultsDesc();
             calc.maxValue();
 
             // 5️⃣ 계속할지 여부
@@ -83,94 +84,3 @@ public class App {
         System.out.println();
     }
 }
-        /*
-        // 정수용 계산기: Integer로 파싱
-        Calculator.ArithmeticCalculator<Integer> intCalc = new Calculator.ArithmeticCalculator<>(Integer::parseInt);
-        // 실수용 계산기: Double로 파싱
-        Calculator.ArithmeticCalculator<Double> doubleCalc = new Calculator.ArithmeticCalculator<>(Double::parseDouble);
-
-        Scanner scanner = new Scanner(System.in);
-
-        while (true) {
-            try {
-                // 사용자 입력 받기
-                System.out.print("첫 번째 숫자를 입력하세요: ");
-                String num1 = scanner.nextLine();
-
-                System.out.print("두 번째 숫자를 입력하세요: ");
-                String num2 = scanner.nextLine();
-
-                System.out.print("사칙연산 기호를 입력하세요 (+, -, *, /): ");
-                String operator = scanner.nextLine().trim();
-
-                // 1️⃣ 먼저 double 계산기로 계산
-                doubleCalc.setDecimalPlaces(6);
-                double tempResult = doubleCalc.calculate(num1, num2, operator);
-
-                // 2️⃣ 결과값이 정수인지 실수인지 판단
-                boolean isFloatingPoint = tempResult % 1 != 0;
-
-                // 계산기 선택 및 계산 수행
-                if (isFloatingPoint) {
-                    //소수점 최대 6자리까지 표시
-                    doubleCalc.setDecimalPlaces(6);
-                    //실수 계산기 사용
-                    double result = doubleCalc.calculate(num1, num2, operator);
-                    List<Double> results = doubleCalc.getResults();
-                    //결과 리스트 가져오기
-
-                    //소수점 포맷 설정
-                    DecimalFormat df = new DecimalFormat(doubleCalc.getDecimalFormatPattern());
-
-                    System.out.print("저장된 연산 결과: ");
-                    //정수면 정수로 출력, 실수면 포맷 적용해서 출력
-                    for (int i = 0; i < results.size(); i++) {
-                        double r = results.get(i);
-                        if (r % 1 == 0) {
-                            System.out.print((int) r);
-                        } else {
-                            System.out.print(df.format(r));
-                        }
-                        if (i < results.size() - 1) {
-                            System.out.print(", ");
-                        }
-                    }
-                    System.out.println();
-                } else {
-                    //정수 계산기 사용
-                    intCalc.setDecimalPlaces(0); //정수는 소수점 없음
-                    int result = intCalc.calculate(num1, num2, operator);
-                    List<Integer> results = intCalc.getResults();
-
-                    System.out.print("저장된 연산 결과: ");
-                    for (int i = 0; i < results.size(); i++) {
-                        System.out.print(results.get(i));
-                        if (i < results.size() - 1) {
-                            System.out.print(", ");
-                        }
-                    }
-                    System.out.println();
-                }
-
-            } catch (NumberFormatException e) {
-                System.out.println("[ERROR] 숫자를 정확히 입력해주세요.");
-                continue;
-            } catch (IllegalArgumentException e) {
-                System.out.println("[ERROR] 연산 기호를 정확히 입력해주세요.");
-                continue;
-            } catch (ArithmeticException e) {
-                System.out.println("[ERROR] " + e.getMessage());
-                continue;
-            }
-
-            // 계속할지 여부 확인
-            System.out.print("더 계산하시겠습니까? (exit 입력 시 종료, 아니면 Enter): ");
-            String exitInput = scanner.nextLine();
-            if (exitInput.equalsIgnoreCase("exit")) {
-                System.out.println("프로그램을 종료합니다.");
-                break;
-            }
-            System.out.println();
-        }
-    }
-}*/
