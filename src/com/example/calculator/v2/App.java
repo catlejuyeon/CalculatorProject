@@ -57,13 +57,12 @@ public class App {
 
             // 5️⃣ 계속할지 여부
             System.out.print("더 계산하시겠습니까? (exit 입력 시 종료): ");
-            if (sc.nextLine().equalsIgnoreCase("exit")) {
-                System.out.println("프로그램을 종료합니다.");
-                break;
-            }
+            if (sc.nextLine().equalsIgnoreCase("exit")) break;
+
             System.out.println();
         }
         sc.close();
+        System.out.println("프로그램을 종료합니다.");
     }
 
     // 입력값을 적절한 타입으로 변환 (정수/실수 자동 판별)
