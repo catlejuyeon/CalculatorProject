@@ -31,11 +31,7 @@ import java.util.stream.Collectors;
                     case MULTIPLY -> a * b;
                     default -> throw new IllegalStateException("정수 연산은 나눗셈을 지원하지 않습니다.");
                 };
-
-                Integer boxedResult = result;  // int를 Integer로 박싱
-                results.add(boxedResult);   //중복
-                lastResult = boxedResult;
-                return boxedResult; // Integer 반환
+                return saveResult(result);
             }
 
             // 하나라도 실수이거나 나눗셈인 경우
@@ -53,15 +49,19 @@ import java.util.stream.Collectors;
                         yield a / b;
                     }
                 };
-
-                // 결과가 정수값이면 Integer로 저장 (예: 6.0 / 2.0 = 3)
-                Number finalResult = (result % 1 == 0)
-                        ? Integer.valueOf((int) result)
-                        : result;
-                results.add(finalResult);   //중복
-                lastResult = finalResult;
-                return finalResult; // Integer 또는 Double 반환
+                return saveResult(result);
             }
+        }
+
+        //결과 저장 메소드
+        private Number saveResult(double result){
+            // 결과가 정수값이면 Integer로 저장 (예: 6.0 / 2.0 = 3)
+            Number finalResult = (result % 1 == 0)
+                    ? Integer.valueOf((int) result)
+                    : result;
+            results.add(finalResult);   //중복
+            lastResult = finalResult;
+            return finalResult;
         }
 
         public List<Number> getResults() {
