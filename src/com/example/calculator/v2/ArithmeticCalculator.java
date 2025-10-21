@@ -7,11 +7,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Calculator {
-    public enum OperatorType { SUM, MINUS, MULTIPLY, DIVIDE }
-
-    // 제네릭 계산기 클래스
-    public static class ArithmeticCalculator<T extends Number> {
+// 제네릭 계산기 클래스
+    public class ArithmeticCalculator<T extends Number> {
         // Number 타입으로 Integer/Double 모두 저장
         private final List<Number> results = new ArrayList<>();
         private Number lastResult=null; //최근 계산 결과 저장
@@ -36,7 +33,7 @@ public class Calculator {
                 };
 
                 Integer boxedResult = result;  // int를 Integer로 박싱
-                results.add(boxedResult);
+                results.add(boxedResult);   //중복
                 lastResult = boxedResult;
                 return boxedResult; // Integer 반환
             }
@@ -58,8 +55,10 @@ public class Calculator {
                 };
 
                 // 결과가 정수값이면 Integer로 저장 (예: 6.0 / 2.0 = 3)
-                Number finalResult = (result % 1 == 0) ? Integer.valueOf((int) result) : result;
-                results.add(finalResult);
+                Number finalResult = (result % 1 == 0)
+                        ? Integer.valueOf((int) result)
+                        : result;
+                results.add(finalResult);   //중복
                 lastResult = finalResult;
                 return finalResult; // Integer 또는 Double 반환
             }
@@ -138,4 +137,3 @@ public class Calculator {
             return (d % 1 == 0) ? String.valueOf((int) d) : df.format(d);
         }
     }
-}

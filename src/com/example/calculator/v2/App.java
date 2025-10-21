@@ -8,7 +8,7 @@ public class App {
     private static final DecimalFormat df = new DecimalFormat("0.#####");
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        Calculator.ArithmeticCalculator<Number> calc = new Calculator.ArithmeticCalculator<>();
+        ArithmeticCalculator<Number> calc = new ArithmeticCalculator<>();
 
         while (true) {
             Number num1, num2;
@@ -63,6 +63,7 @@ public class App {
             }
             System.out.println();
         }
+        sc.close();
     }
 
     // 입력값을 적절한 타입으로 변환 (정수/실수 자동 판별)
@@ -85,7 +86,7 @@ public class App {
                 : df.format(d); //2.5 -> "2.5" , 1.12345 -> "1.12345"
     }
 
-    // 결과 출력 (정수면 정수, 소수면 최대 5자리)
+    // 결과 출력
     private static void printResults(List<Number> results) {  //List<Number>로 변경
         System.out.print("저장된 연산 결과: ");
         for (int i = 0; i < results.size(); i++) {
