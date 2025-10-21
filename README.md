@@ -34,41 +34,69 @@ Java 제네릭을 활용한 사칙연산 계산기 프로젝트
 ## 🎮 사용 방법
 ### 기본사용
 ```java
-// 계산기 생성 (Integer 타입)
-Calculator.ArithmeticCalculator<Integer> calc = 
-    new Calculator.ArithmeticCalculator<>();
+// 계산기 생성 (Number 타입) -> Integer/Double 모두 가능
+ArithmeticCalculator<Number> calc = new ArithmeticCalculator<>();
 
 // 계산 수행
-Double result = calc.calculate(10, 5, "+");  // 15.0
+Number result1 = calc.calculate(10, 5, "+");  // 15
+Number result2 = calc.calculate(5.0, 2, "*"); // 10.0
+Number result3 = calc.calculate(6.0, 2.0, "/"); // 3
 
 // 결과 조회
-List<Double> allResults = calc.getResults();  // [15.0]
+List<Number> allResults = calc.getResults();  // [15, 10.0, 3]
+
+// 결과 출력
+allResults.forEach(r -> System.out.println("결과: " + r));
 
 // 통계 기능
 calc.maxValue();              
 calc.maxValueResultsDesc();
 ```
+💡 포인트
+- 제네릭은 Number로 잡아 정수/실수 모두 처리 가능
+- calculate() 반환 타입도 Number로 바뀌었음
+- 통계 기능(maxValue, maxValueResultsDesc)은 동일하게 사용 가능
 ## 🏗️ 프로젝트 구조
 ```
 com/example/calculator/v2/
 ├── Calculator.java
 │   └── ArithmeticCalculator<T extends Number>
-│       ├── calculate(T, T, String) : Double
+│       ├── calculate(T num1, T num2, String operatorSymbol) : Number
 │       ├── maxValue() : void
 │       ├── maxValueResultsDesc() : void
-│       ├── getResults() : List<Double>
-│       └── (private) convertToDouble(T) : Double
-│       └── (private) formatNumber(Double) : String
+│       ├── getResults() : List<Number>
+│       ├── (private) calculateInteger(int a, int b, OperatorType operator) : Number
+│       ├── (private) calculateDouble(double a, double b, OperatorType operator) : Number
+│       ├── (private) saveResult(double result) : Number
+│       └── (private) formatNumber(Number num) : String
 │
-└── App.java (사용자 입출력 처리)
-    ├── main(String[])
-    └── parseNumber(String) : Number
+├── OperatorType.java
+│   └── enum OperatorType { SUM, MINUS, MULTIPLY, DIVIDE }
+│       └── fromSymbol(String symbol) : OperatorType
+│
+└── App.java
+    ├── main(String[] args)
+    ├── parseNumber(String input) : Number
+    └── printResults(List<Number> results) : void
 ```
-## 🔑핵심 기술
-### 제네릭 타입 매개변수
-public static class ArithmeticCalculator<T extends Number>
-- T는 Number 클래스 또는 그 하위 클래스
-- 컴파일 시점에 타입 안정성 확보
+## 🔑클래스/메서드 요약 
+### 1️⃣ ArithmeticCalculator<T extends Number>
+### 주요 메서드
+- calculate(T num1, T num2, String operatorSymbol) : 계산 수행
+- maxValue() : 최근 결과보다 큰 값 중 최댓값 출력
+- maxValueResultsDesc() : 최근 결과보다 큰 값 내림차순 출력
+- getResults() : 저장된 결과 반환
+### 내부(private) 메서드
+- calculateInteger(int a, int b, OperatorType operator) : 정수 연산 처리
+- calculateDouble(double a, double b, OperatorType operator) : 실수 연산 처리
+- saveResult(double result) : Integer/Double 판단 후 저장
+- formatNumber(Number num) : 포맷 처리
+### 2️⃣ OperatorType (enum)
+- SUM, MINUS, MULTIPLY, DIVIDE
+- fromSymbol(String symbol) : 문자열 → enum 변환
+### 3️⃣ App
+- 사용자 입출력 처리
+- main(), parseNumber(), printResults()
 ### Switch 표현식
 ```java
 double result = switch (operator) {
@@ -83,9 +111,9 @@ double result = switch (operator) {
 ```
 ### Stream 활용
 ```java
-List<Double> maxValueResult = results.stream()
-        .filter(r -> r > lastResult)
-        .sorted(Comparator.reverseOrder())
+List<Number> maxValueResult = results.stream()
+        .filter(r -> r.doubleValue() > lastResult.doubleValue())
+        .sorted(Comparator.comparingDouble(Number::doubleValue).reversed())
         .toList();
 ```
 ## 💻 실행 예시
