@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
         // 실제 계산 수행
         public Number calculate(T num1, T num2, String operatorSymbol) {
-            OperatorType operator = parseOperator(operatorSymbol);
+            OperatorType operator = OperatorType.fromSymbol(operatorSymbol);
 
             // 📌 핵심: 둘 다 정수인지 확인
             // 나눗셈 제외: 정수 나눗셈은 정수가 나올 수 도 있지만, 실수가 나올 경우 소수점을 버리므로 -> 나눗셈은 항상 실수 연산 수행
@@ -62,17 +62,6 @@ import java.util.stream.Collectors;
                 lastResult = finalResult;
                 return finalResult; // Integer 또는 Double 반환
             }
-        }
-
-        // 연산자 문자열 → enum 변환
-        private OperatorType parseOperator(String input) {
-            return switch (input.trim()) {
-                case "+" -> OperatorType.SUM;
-                case "-" -> OperatorType.MINUS;
-                case "*" -> OperatorType.MULTIPLY;
-                case "/" -> OperatorType.DIVIDE;
-                default -> throw new IllegalArgumentException("지원하지 않는 연산자입니다.");
-            };
         }
 
         public List<Number> getResults() {
